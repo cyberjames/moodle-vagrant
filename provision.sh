@@ -5,8 +5,7 @@ apt-get update
 apt-get -y upgrade
 echo "Installing required packages..."
 apt-get -y install \
-	apache2 \
-	libapache2-mod-php \
+	lamp-server^ \
 	postgresql \
 	postgresql-client \
 	php-pgsql \
@@ -22,10 +21,16 @@ apt-get -y install \
 	php-xsl \
 	php-zip \
 	php-mbstring \
-	git
+	git \
+	python \
+	python-pip \
+	libmysqlclient-dev \
+	libpq-dev \
+	python-dev
 echo "Configuring Apache..."
 rm -rf /etc/apache2/sites-enabled
 rm -rf /etc/apache2/sites-available
+machinename=$1
 cat <<EOF > /etc/apache2/apache2.conf
 Mutex file:\${APACHE_LOCK_DIR} default
 PidFile \${APACHE_PID_FILE}
@@ -52,9 +57,9 @@ LogFormat "%{Referer}i -> %U" referer
 LogFormat "%{User-agent}i" agent
 IncludeOptional conf-enabled/*.conf
 <VirtualHost *:80>
-	ServerName moodle.local
-	DocumentRoot /var/www/moodle/html
-	<Directory /var/www/moodle/html>
+	ServerName ${machinename}
+	DocumentRoot /home/ubuntu/www
+	<Directory /home/ubuntu/www>
 		Order allow,deny
 		Allow from All
 	</Directory>
@@ -72,43 +77,26 @@ host    all             all             ::1/128                 md5
 EOF
 service postgresql restart
 sudo -u postgres createuser -SRDU postgres moodle
-sudo -u postgres createdb -E UTF-8 -O moodle -U postgres moodle
-echo "Creating Moodle directories..."
-mkdir -p /var/www/moodle/html
-mkdir -p /var/www/moodle/data
-cd /var/www/moodle/html
-echo "Retrieving latest stable Moodle version..."
-git clone https://github.com/moodle/moodle.git .
-LATEST_VERSION=$(git tag | awk '{print $1}' | grep -v '}$' | grep -v 'beta' | grep -v 'rc' | sed 's/^v//' | sort -t. -k 1,1n -k 2,2n -k 3,3n | tail -n1)
-echo "Checking out Moodle version ${LATEST_VERSION}..."
-git checkout "tags/v${LATEST_VERSION}" -b "v${LATEST_VERSION}"
-echo "Installing Moodle..."
-php admin/cli/install.php \
-	--lang="en" \
-	--wwwroot="http://moodle.local" \
-	--dataroot="/var/www/moodle/data" \
-	--dbtype="pgsql" \
-	--dbname="moodle" \
-	--dbuser="moodle" \
-	--fullname="Moodle" \
-	--shortname="moodle" \
-	--adminpass="Admin1!" \
-	--agree-license \
-	--non-interactive
-chown www-data:www-data -R /var/www/moodle
+echo "Moodle-SDK (MDK) installation..."
+cd ~
+if [ -f "get-pip.py" ]
+then
+    echo "get-pip.py already downloaded..."
+else
+    echo "Downloading get-pip.py..."
+    wget https://bootstrap.pypa.io/get-pip.py
+fi
+python get-pip.py
+echo "Installing MDK..."
+pip install moodle-sdk
 echo "Restarting Apache..."
 service apache2 restart
+ipAddress=$2
 cat <<EOF
-Service installed at http://moodle.local/
+Service installed at http://${machinename}/
 
 You will need to add a hosts file entry for:
 
-moodle.local points to 192.168.33.10
+${machinename} points to ${ipAddress}
 
-username: admin
-password: Admin1!
-
-EOF
-cat <<EOF > /etc/cron.d/moodle
-* * * * * www-data /usr/bin/env php /var/www/moodle/html/admin/cli/cron.php
 EOF
