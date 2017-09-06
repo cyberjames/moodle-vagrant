@@ -63,6 +63,6 @@ Vagrant.configure(2) do |config|
 	# Set up box. Install Apache, PostgreSQL, and MDK.
 	config.vm.provision  :shell, :path => "provision.sh", :args => [hostname, ipAddress]
     githubUsername = settings["github_username"] ||= "YourGitHub"
-	config.vm.provision  :shell, :path => "initmdk.sh", :args => [githubUsername, hostname], :privileged => false
+	config.vm.provision  :shell, :path => "initmdk.sh", :args => [githubUsername, hostname, ipAddress], :privileged => false
 
 end

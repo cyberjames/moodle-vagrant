@@ -26,7 +26,9 @@ apt-get -y install \
 	python-pip \
 	libmysqlclient-dev \
 	libpq-dev \
-	python-dev
+	python-dev \
+	phpmyadmin \
+	phppgadmin
 echo "Configuring Apache..."
 rm -rf /etc/apache2/sites-enabled
 rm -rf /etc/apache2/sites-available
