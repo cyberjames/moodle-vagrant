@@ -1,5 +1,6 @@
 # moodle-vagrant
-Moodle Vagrant installer (Ubuntu 16.04, Apache, PHP7, PostgreSQL, Latest Moodle)
+Moodle Vagrant installer 
+(Ubuntu 16.04, Apache, PHP7, PostgreSQL, MySQL, MDK, Moodle Dev and Integration instances)
 
 This is perfect for local testing and development installations.
 
@@ -13,22 +14,38 @@ Usage instructions:
 
 - Clone moodle-vagrant:
 
-git clone https://github.com/digitalsparky/moodle-vagrant.git
+git clone https://github.com/junpataleta/moodle-vagrant.git
 
 - Change to moodle-vagrant directory
+
+cd moodle-vagrant
+
+- Initialise moodle-vagrant
+
+On Linux: ./init.sh
+
+On Windows: init.bat
+
+- Edit moodle-vagrant.yaml. You may want to set your Github username and the minimum Moodle version that MDK will install.
+
 - Execute vagrant:
 
 vagrant up
 
-Moodle will be available at http://moodle.local/
+Moodle development and integration instances from the minimum Moodle version up to the master branch will be installed by MDK.
 
-You will need to add a hosts file entry for:
-moodle.local points to 192.168.33.10
+- Development sites:
 
-Authentication Details:
+http://localhost:8080/stable_master
 
-- username: admin
-- password: Admin1!
+...
 
-This has been tested using Vagrant 1.8.5
+http://localhost:8080/stable_[min_version]
 
+- Integration sites:
+
+http://localhost:8080/integration_master
+
+...
+
+http://localhost:8080/integration_[min_version]

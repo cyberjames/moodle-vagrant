@@ -1,0 +1,16 @@
+---
+memory: 2048
+cpus: 2
+mdk: true
+hostname: "moodle.local"
+
+# Github username. Uncomment to set your Github username. To be used by MDK.
+#github_username: "YourGithubUsernameHere"
+
+# Minimum Moodle version to install.
+min_version: 31
+
+authorize: ~/.ssh/id_rsa.pub
+
+keys:
+    - ~/.ssh/id_rsa
