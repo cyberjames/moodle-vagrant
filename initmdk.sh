@@ -33,7 +33,14 @@ mdk config set path
 mdk config set dirs.storage ${moodlesDir}
 mdk config set dirs.www ${wwwDir}
 
-mdk config set host localhost:${httpPort}
+# Set host information (used for $CFG->wwwroot).
+mdkHost=localhost
+if [ $httpPort -ne 80 ] && [ $httpPort -ne 443 ]; then
+    # Attach port if the host will not be using the standard HTTP/HTTPS ports.
+    mdkHost=${mdkHost}:${httpPort}
+fi
+mdk config set host $mdkHost
+
 echo "Installing Moodle instances..."
 
 masterBranch=$(mdk config show masterBranch)
@@ -61,13 +68,14 @@ echo "You may access the following sites on your host machine via the following 
 
 echo "Development instances:"
 moodleVersion=$masterBranch
+mdkScheme=$(mdk config show scheme)
 while [ $moodleVersion -ge $minVersion ]; do
     tmpVersion=$moodleVersion
     if [ $tmpVersion -eq $masterBranch ]; then
         tmpVersion=master
     fi
     cat <<EOF
-http://localhost:${httpPort}/stable_${tmpVersion}
+${mdkScheme}://${mdkHost}/stable_${tmpVersion}
 EOF
     ((moodleVersion--))
 done
@@ -80,10 +88,13 @@ while [ $moodleVersion -ge $minVersion ]; do
         tmpVersion=master
     fi
     cat <<EOF
-http://localhost:${httpPort}/integration_${tmpVersion}
+${mdkScheme}://${mdkHost}/integration_${tmpVersion}
 EOF
     ((moodleVersion--))
 done
+
+# Make sure all of the instances' config are good.
+mdk doctor --fix --all
 
 cat <<EOF
 Enjoy!

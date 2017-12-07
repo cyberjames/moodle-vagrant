@@ -19,9 +19,17 @@ Vagrant.configure(2) do |config|
 	config.vm.hostname = hostname
 	config.vm.box = "ubuntu/xenial64"
 
-    httpPort = 8080
-	config.vm.network :forwarded_port, guest: 80, host: httpPort
-	config.vm.synced_folder ".", "/vagrant", create: true
+    httpPort = 80
+    # Map ports.
+    if settings.include? 'ports'
+        settings["ports"].each do |port|
+            if (port["guest"] == 80)
+                httpPort = port["host"]
+            end
+            config.vm.network :forwarded_port, guest: port["guest"], host: port["host"]
+        end
+    end
+    config.vm.synced_folder ".", "/vagrant", create: true
 
 	config.vm.provider "virtualbox" do |vb|
 		vb.customize ["modifyvm", :id, "--name", "moodle"]
@@ -29,7 +37,7 @@ Vagrant.configure(2) do |config|
         vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
 	end
 
-	# Set up box. Install Apache, PostgreSQL, and MDK.
+	# Set up box. Install LAMP, PostgreSQL, and MDK.
 	config.vm.provision  :shell, :path => "provision.sh", :args => [hostname]
     githubUsername = settings["github_username"] ||= "YourGitHub"
     minVersion = settings["min_version"] ||= 0

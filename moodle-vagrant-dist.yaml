@@ -10,6 +10,11 @@ hostname: "moodle.local"
 # Minimum Moodle version to install.
 min_version: 31
 
+# Ports to forward to the host.
+ports:
+  - host: 80
+    guest: 80
+
 authorize: ~/.ssh/id_rsa.pub
 
 keys:
