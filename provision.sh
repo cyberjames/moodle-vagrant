@@ -79,6 +79,27 @@ moodle
 EOF
 service postgresql restart
 
+echo "Installing Docker Community Edition..."
+apt-get update
+apt-get -y install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+apt update
+apt-get -y install docker-ce
+echo "Testing Docker CE installation..."
+docker run --name hello hello-world
+docker stop hello
+docker rm hello
+echo "Adding user ubuntu to the docker users group"
+usermod -aG docker ubuntu
+
 echo "Moodle-SDK (MDK) installation..."
 cd ~
 if [ -f "get-pip.py" ]
