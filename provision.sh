@@ -21,6 +21,8 @@ apt-get -y install \
 	php-xsl \
 	php-zip \
 	php-mbstring \
+	php-ldap \
+	build-essentials \
 	git \
 	python \
 	python-pip \
@@ -28,7 +30,10 @@ apt-get -y install \
 	libpq-dev \
 	python-dev \
 	phpmyadmin \
-	phppgadmin
+	phppgadmin \
+	ruby-dev \
+	libsqlite3-dev \
+	unixodbc-dev
 echo "Configuring Apache..."
 machinename=$1
 cat <<EOF > /etc/apache2/sites-available/000-default.conf
@@ -78,6 +83,9 @@ moodle
 \quit
 EOF
 service postgresql restart
+
+echo "Installing MailCatcher..."
+gem install mailcatcher
 
 echo "Installing Docker Community Edition..."
 apt-get update

@@ -33,8 +33,8 @@ Vagrant.configure(2) do |config|
 
 	config.vm.provider "virtualbox" do |vb|
 		vb.customize ["modifyvm", :id, "--name", "moodle"]
-		vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "2048"]
-        vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "1"]
+		vb.customize ["modifyvm", :id, "--memory", settings["memory"] ||= "4096"]
+        vb.customize ["modifyvm", :id, "--cpus", settings["cpus"] ||= "2"]
 	end
 
 	# Set up box. Install LAMP, PostgreSQL, and MDK.

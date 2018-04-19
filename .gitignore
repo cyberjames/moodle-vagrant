@@ -1,3 +1,4 @@
 .vagrant
 moodle-vagrant.yaml
 *console.log
+.idea

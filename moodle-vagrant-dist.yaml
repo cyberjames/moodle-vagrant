@@ -1,5 +1,5 @@
 ---
-memory: 2048
+memory: 4096
 cpus: 2
 mdk: true
 hostname: "moodle.local"
@@ -14,6 +14,9 @@ min_version: 31
 ports:
   - host: 80
     guest: 80
+  # For MailCatcher.
+  - host: 1080
+    guest: 1080
 
 authorize: ~/.ssh/id_rsa.pub
 
