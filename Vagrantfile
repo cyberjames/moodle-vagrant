@@ -29,7 +29,7 @@ Vagrant.configure(2) do |config|
             config.vm.network :forwarded_port, guest: port["guest"], host: port["host"]
         end
     end
-    config.vm.synced_folder ".", "/vagrant", create: true
+    config.vm.synced_folder "moodles", "/home/vagrant/moodles", create: true
 
     config.vm.provider "virtualbox" do |vb|
         vb.customize ["modifyvm", :id, "--name", "moodle"]

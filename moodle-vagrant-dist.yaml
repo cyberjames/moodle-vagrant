@@ -8,7 +8,7 @@ hostname: "moodle.local"
 #github_username: "YourGithubUsernameHere"
 
 # Minimum Moodle version to install.
-min_version: 31
+min_version: 0
 
 # Ports to forward to the host.
 ports:
