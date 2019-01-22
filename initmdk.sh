@@ -45,7 +45,8 @@ echo "Installing Moodle instances..."
 
 masterBranch=$(mdk config show masterBranch)
 
-if [ $minVersion -eq 0 ]; then
+# Make sure the min version can support the VM's PHP version. (This box is on PHP7.2 for now, so we can't install 3.1 and below).
+if [ $minVersion -le 31 ] || [ $minVersion -gt $masterBranch ]; then
     minVersion=$masterBranch
 fi
 
