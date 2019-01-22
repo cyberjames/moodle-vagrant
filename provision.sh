@@ -47,8 +47,8 @@ cat <<EOF > /etc/apache2/sites-available/000-default.conf
     ServerName ${machinename}
 
     ServerAdmin webmaster@localhost
-    DocumentRoot /home/ubuntu/www
-    <Directory /home/ubuntu/www/>
+    DocumentRoot /home/vagrant/www
+    <Directory /home/vagrant/www/>
         Options Indexes FollowSymLinks
         AllowOverride None
         Require all granted
@@ -115,8 +115,8 @@ echo "Testing Docker CE installation..."
 docker run --name hello hello-world
 docker stop hello
 docker rm hello
-echo "Adding user ubuntu to the docker users group"
-usermod -aG docker ubuntu
+echo "Adding user vagrant to the docker users group"
+usermod -aG docker vagrant
 
 echo "Moodle-SDK (MDK) installation..."
 cd ~
